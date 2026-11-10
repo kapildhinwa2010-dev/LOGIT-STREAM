@@ -7,14 +7,13 @@ V = 10
 
 
 def make_prefix_logits():
-    rng = np.random.default_rng(7)
-    p0 = rng.normal(size=V)
-    p0[2] += 10.0  # wrong early leader
-    p1 = p0 + rng.normal(size=V) * 0.1
+    p0 = np.zeros(V)
+    p0[2] = 10.0
+    p1 = p0.copy()
     p1[3] += 1.0
-    p2 = p1 + rng.normal(size=V) * 0.1
-    p2[7] += 8.0   # answer takes the lead here
-    p3 = p2 + rng.normal(size=V) * 0.1
+    p2 = p1.copy()
+    p2[7] += 12.0
+    p3 = p2.copy()
     p3[7] += 2.0
     return [p0, p1, p2, p3]
 
@@ -23,9 +22,10 @@ def test_layer_contributions_telescope():
     prefixes = make_prefix_logits()
     r = layer_contributions(prefixes, target=7)
     assert r["num_layers"] == 4
-    assert r["final_logit"] == pytest.approx(float(prefixes[-1][7]))
+    assert r["final_logit"] == pytest.approx(14.0)
     assert r["sum_check"] == pytest.approx(r["final_logit"])
-    assert sum(r["layer_increments"]) == pytest.approx(r["final_logit"])
+    assert sum(r["layer_increments"]) == pytest.approx(14.0)
+    assert r["layer_increments"] == [0.0, 0.0, 12.0, 2.0]
 
 
 def test_birth_layer():
@@ -35,6 +35,16 @@ def test_birth_layer():
     assert cert["birth_layer"] == 2
     assert cert["layer_increments"][2] > 5.0
     assert abs(sum(cert["positive_share"]) - 1.0) < 1e-9
+    assert cert["positive_share"][2] == pytest.approx(12.0 / 14.0)
+
+
+def test_early_leader_is_not_answer():
+    prefixes = make_prefix_logits()
+    cert = birth_certificate(prefixes, target=2)
+    assert cert["answer"] == 7
+    assert cert["birth_layer"] == 2
+    # target 2 had a strong early lead but loses ground
+    assert cert["layer_increments"][0] == pytest.approx(10.0)
 
 
 def test_target_out_of_range():
