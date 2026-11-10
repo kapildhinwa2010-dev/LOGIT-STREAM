@@ -19,7 +19,7 @@ classifiers = [
 dependencies = ["numpy>=1.23"]
 
 [project.optional-dependencies]
-test = ["pytest>=7"]
+test = ["pytest>=9.2.0"]
 
 [project.urls]
 Homepage = "https://github.com/kapildhinwa2010-dev/LOGIT-STREAM"
