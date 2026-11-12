@@ -1,5 +1,7 @@
 # LOGIT-STREAM
 
+[![Stars](https://img.shields.io/github/stars/kapildhinwa2010-dev/LOGIT-STREAM?style=flat-square)](https://github.com/kapildhinwa2010-dev/LOGIT-STREAM/stargazers) [![Forks](https://img.shields.io/github/forks/kapildhinwa2010-dev/LOGIT-STREAM?style=flat-square)](https://github.com/kapildhinwa2010-dev/LOGIT-STREAM/network/members) [![Issues](https://img.shields.io/github/issues/kapildhinwa2010-dev/LOGIT-STREAM?style=flat-square)](https://github.com/kapildhinwa2010-dev/LOGIT-STREAM/issues) [![Top language](https://img.shields.io/github/languages/top/kapildhinwa2010-dev/LOGIT-STREAM?style=flat-square)](https://github.com/kapildhinwa2010-dev/LOGIT-STREAM)
+
 Give every answer token a birth certificate: which layer pushed it to the top.
 
 LOGIT-STREAM takes a logit-lens style stream: the logits read out after every layer prefix. It decomposes the final logit of any token into per-layer increments, finds the birth layer where the final answer first becomes the top token, and reports how the positive increments are shared across layers.
